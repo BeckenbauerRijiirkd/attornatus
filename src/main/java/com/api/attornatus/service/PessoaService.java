@@ -1,13 +1,11 @@
 package com.api.attornatus.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.api.attornatus.controller.Dto.PessoaDetalheDto;
 import com.api.attornatus.controller.Dto.PessoaDto;
 import com.api.attornatus.controller.Form.PessoaCreateForm;
 import com.api.attornatus.model.Pessoa;
@@ -25,17 +23,32 @@ public class PessoaService {
         return PessoaDto.converter(pessoas);
     }
 
-    public PessoaDetalheDto buscarPessoa(Long id){
+    public Pessoa buscaPessoaPorId(Long id) {
 
         Pessoa pessoa = pRepository.findById(id).orElseThrow(() -> new ServiceException("Pessoa não encontrada"));
 
-
-    return new PessoaDetalheDto(pessoa);
+        return pessoa;
     }
 
     public void cadastrarPessoas(PessoaCreateForm create) {
 
-        Pessoa pessoa = new Pessoa(create.getNome(), create.getDtNascimento());
+        Pessoa pessoa = new Pessoa(create.getNome(), create.getDtNascimento(), create.getEnderecos());
+
+        if (!pessoa.getEnderecos().isEmpty())
+            pessoa.getEnderecos().stream().forEach(endereco -> endereco.setPessoa(pessoa));
+
+        pRepository.save(pessoa);
+
+    }
+
+    public void alteraEnderecoPrincipal(Long idPessoa, Long idEndereco) {
+
+        Pessoa pessoa = this.buscaPessoaPorId(idPessoa);
+
+        pessoa.getEnderecos().stream().forEach(endereco -> {
+
+            endereco.setPrincipal(endereco.getId().equals(idEndereco));
+        });
 
         pRepository.save(pessoa);
 

@@ -3,14 +3,15 @@ package com.api.attornatus.model;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,16 +25,18 @@ public class Pessoa {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long pessoa_id;
+    private Long id;
     private String nome;
     private LocalDate dtNascimento;
 
-    @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "pessoa_id")
     private List<Endereco> enderecos;
 
-    public Pessoa(String nome, LocalDate dtNascimento) {
+    public Pessoa(String nome, LocalDate dtNascimento, List<Endereco> enderecos) {
         this.nome = nome;
         this.dtNascimento = dtNascimento;
+        this.enderecos = enderecos;
     }
 }
