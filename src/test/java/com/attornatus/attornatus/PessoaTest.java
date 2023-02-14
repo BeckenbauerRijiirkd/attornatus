@@ -72,10 +72,12 @@ public class PessoaTest {
 
                 assertNotNull(response);
 
+                assertEquals(response, pessoa);
+
         }
 
         @Test
-        public void quandocadastrarPessoaRetorneSucesso() {
+        public void quandoCadastrarPessoaRetorneSucesso() {
 
                 CreatePessoa cadastro = new CreatePessoa("teste", LocalDate.now(), new ArrayList<Endereco>());
 
