@@ -34,6 +34,11 @@ public class Pessoa {
     @JoinColumn(name = "pessoa_id")
     private List<Endereco> enderecos;
 
+    
+    public Pessoa(Long id) {
+        this.id = id;
+    }
+
     public Pessoa(String nome, LocalDate dtNascimento, List<Endereco> enderecos) {
         this.nome = nome;
         this.dtNascimento = dtNascimento;

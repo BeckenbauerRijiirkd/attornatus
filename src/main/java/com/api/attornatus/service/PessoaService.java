@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.api.attornatus.controller.Dto.PessoaDto;
 import com.api.attornatus.controller.Form.CreatePessoa;
 import com.api.attornatus.controller.Form.UpdatePessoa;
+import com.api.attornatus.model.Endereco;
 import com.api.attornatus.model.Pessoa;
 import com.api.attornatus.repository.PessoaRepository;
 
@@ -65,6 +66,20 @@ public class PessoaService {
 
         pRepository.save(pessoa);
 
+    }
+
+    public void cadastrarEndereco(Long idPessoa, Endereco endereco){
+
+        
+        Pessoa pessoa = this.buscaPessoaPorId(idPessoa);
+
+        pessoa.getEnderecos().add(endereco);
+
+        pessoa.getEnderecos().stream().forEach(enderecoLb -> {
+            enderecoLb.setPessoa(pessoa);
+        });
+
+        pRepository.save(pessoa);
     }
 
 
