@@ -1,7 +1,10 @@
 package com.attornatus.attornatus;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -68,6 +71,13 @@ public class PessoaTest {
         pessoaService.cadastrarPessoas(cadastro);
 
         Mockito.verify(pessoaRepository).save(new Pessoa("teste", LocalDate.now(), new ArrayList<Endereco>()));
+
+    }
+
+    @Test
+    public void quandoCadastrarEnderecoRetorneSucesso(){
+
+        // Endereco endereco = new Endereco(anyLong(), anyString(), anyString(), anyString(), anyInt(), anyString(), anyBoolean());
 
     }
 
