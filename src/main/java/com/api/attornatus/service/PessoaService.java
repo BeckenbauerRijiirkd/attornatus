@@ -13,8 +13,6 @@ import com.api.attornatus.model.Endereco;
 import com.api.attornatus.model.Pessoa;
 import com.api.attornatus.repository.PessoaRepository;
 
-import jakarta.validation.Valid;
-
 @Service
 public class PessoaService {
     @Autowired
@@ -44,7 +42,7 @@ public class PessoaService {
         pRepository.save(pessoa);
 
     }
-    
+
     public void alterarPessoas(Long idPessoa, UpdatePessoa update) {
 
         Pessoa pessoa = this.buscaPessoaPorId(idPessoa);
@@ -65,12 +63,10 @@ public class PessoaService {
         });
 
         pRepository.save(pessoa);
-
     }
 
-    public void cadastrarEndereco(Long idPessoa, Endereco endereco){
+    public void cadastrarEndereco(Long idPessoa, Endereco endereco) {
 
-        
         Pessoa pessoa = this.buscaPessoaPorId(idPessoa);
 
         pessoa.getEnderecos().add(endereco);
@@ -81,6 +77,5 @@ public class PessoaService {
 
         pRepository.save(pessoa);
     }
-
 
 }

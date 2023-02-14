@@ -1,7 +1,5 @@
 package com.api.attornatus.model;
 
-import org.springframework.boot.context.properties.bind.DefaultValue;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -33,7 +31,7 @@ public class Endereco {
     private String cep;
     private Integer numero;
     private String cidade;
-    @Column (nullable = false, columnDefinition="boolean default false")
+    @Column(nullable = false, columnDefinition = "boolean default false")
     private Boolean principal = false;
 
 }
