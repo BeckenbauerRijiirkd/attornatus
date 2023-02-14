@@ -1,16 +1,14 @@
 package com.attornatus.attornatus;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import org.hibernate.service.spi.ServiceException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,62 +21,103 @@ import com.api.attornatus.controller.Dto.PessoaDto;
 import com.api.attornatus.controller.Form.CreatePessoa;
 import com.api.attornatus.model.Endereco;
 import com.api.attornatus.model.Pessoa;
+import com.api.attornatus.repository.EnderecoRepository;
 import com.api.attornatus.repository.PessoaRepository;
+import com.api.attornatus.service.EnderecoService;
 import com.api.attornatus.service.PessoaService;
 
 @ExtendWith(MockitoExtension.class)
 
 @AutoConfigureMockMvc
 public class PessoaTest {
-    @Mock
-    public PessoaRepository pessoaRepository;
+        @Mock
+        public PessoaRepository pessoaRepository;
 
-    @InjectMocks
-    public PessoaService pessoaService;
+        @Mock
+        public EnderecoRepository enderecoRepository;
 
-    @Test
-    public void quandoBuscarPessoasRetorneSucesso() {
+        @InjectMocks
+        public PessoaService pessoaService;
 
-        List<Pessoa> lista = new ArrayList<Pessoa>();
+        @InjectMocks
+        public EnderecoService enderecoService;
 
-        Mockito.when(pessoaRepository.findAll())
-                .thenReturn(lista);
+        @Test
+        public void quandoBuscarPessoasRetorneSucesso() {
 
-        List<PessoaDto> response = pessoaService.buscarPessoas();
+                List<Pessoa> lista = new ArrayList<Pessoa>();
 
-        assertNotNull(response);
+                Mockito.when(pessoaRepository.findAll())
+                                .thenReturn(lista);
 
-    }
+                List<PessoaDto> response = pessoaService.buscarPessoas();
 
-    @Test
-    public void quandoBuscarUmaPessoaRetorneSucesso() {
+                assertNotNull(response);
 
-        Mockito.when(
-                pessoaRepository.findById(anyLong()).orElseThrow(() -> new ServiceException("Pessoa não encontrada")))
-                .thenReturn(new Pessoa("teste", LocalDate.now(), new ArrayList<Endereco>()));
+        }
 
-        Pessoa response = pessoaService.buscaPessoaPorId(anyLong());
+        @Test
+        public void quandoBuscarUmaPessoaRetorneSucesso() {
 
-        assertNotNull(response);
+                Endereco endereco = new Endereco(1L, new Pessoa(), "Logradouro teste",
+                                "4910000", 10, "AJU", true);
 
-    }
+                Pessoa pessoa = new Pessoa(1L, "teste", LocalDate.now(), new ArrayList<Endereco>(List.of(endereco)));
 
-    @Test
-    public void quandocadastrarPessoaRetorneSucesso() {
+                Mockito.when(
+                                pessoaRepository.findById(anyLong()))
+                                .thenReturn(Optional.of(pessoa));
 
-        CreatePessoa cadastro = new CreatePessoa("teste", LocalDate.now(), new ArrayList<Endereco>());
+                Pessoa response = pessoaService.buscaPessoaPorId(anyLong());
 
-        pessoaService.cadastrarPessoas(cadastro);
+                assertNotNull(response);
 
-        Mockito.verify(pessoaRepository).save(new Pessoa("teste", LocalDate.now(), new ArrayList<Endereco>()));
+        }
 
-    }
+        @Test
+        public void quandocadastrarPessoaRetorneSucesso() {
 
-    @Test
-    public void quandoCadastrarEnderecoRetorneSucesso(){
+                CreatePessoa cadastro = new CreatePessoa("teste", LocalDate.now(), new ArrayList<Endereco>());
 
-        // Endereco endereco = new Endereco(anyLong(), anyString(), anyString(), anyString(), anyInt(), anyString(), anyBoolean());
+                pessoaService.cadastrarPessoas(cadastro);
 
-    }
+                Mockito.verify(pessoaRepository).save(new Pessoa("teste", LocalDate.now(), new ArrayList<Endereco>()));
+
+        }
+
+        @Test
+        public void quandoCadastrarEnderecoRetorneSucesso() {
+
+                Endereco endereco = new Endereco(1L, new Pessoa(), "Logradouro teste",
+                                "4910000", 10, "AJU", true);
+
+                Pessoa pessoa = new Pessoa(1L, "teste", LocalDate.now(), new ArrayList<Endereco>(List.of(endereco)));
+
+                Mockito.when(
+                                pessoaRepository.findById(1L))
+                                .thenReturn(Optional.of(pessoa));
+
+                pessoaService.cadastrarEndereco(1L, endereco);
+
+                Mockito.verify(pessoaRepository).save(pessoa);
+
+        }
+
+        @Test
+        public void quandoBuscarEnderecosRetorneSucesso() {
+
+                Endereco endereco = new Endereco(1L, new Pessoa(), "Logradouro teste",
+                                "4910000", 10, "AJU", true);
+
+                Mockito.when(enderecoRepository.findByPessoa(new Pessoa(1L)))
+                                .thenReturn(List.of(endereco));
+
+                List<Endereco> response = enderecoService.listarEnderecosPessoa(1L);
+
+                assertNotNull(response);
+
+                assertEquals(List.of(endereco), response);
+
+        }
 
 }
