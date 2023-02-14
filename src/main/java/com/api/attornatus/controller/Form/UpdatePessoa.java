@@ -1,9 +1,6 @@
 package com.api.attornatus.controller.Form;
 
 import java.time.LocalDate;
-import java.util.List;
-
-import com.api.attornatus.model.Endereco;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -16,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class PessoaCreateForm {
+public class UpdatePessoa {
 
     @NotBlank
     @NotEmpty
@@ -27,6 +24,5 @@ public class PessoaCreateForm {
     @Past
     private LocalDate dtNascimento;
 
-    private List<Endereco> enderecos;
 
 }

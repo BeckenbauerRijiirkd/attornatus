@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.attornatus.controller.Dto.PessoaDto;
-import com.api.attornatus.controller.Form.PessoaCreateForm;
+import com.api.attornatus.controller.Form.CreatePessoa;
+import com.api.attornatus.controller.Form.UpdatePessoa;
 import com.api.attornatus.model.Pessoa;
 import com.api.attornatus.service.PessoaService;
 
@@ -42,12 +43,21 @@ public class PessoaController {
     }
 
     @PostMapping
-    public ResponseEntity<?> criarPessoa(@Valid @RequestBody PessoaCreateForm pessoa) {
+    public ResponseEntity<?> criarPessoa(@Valid @RequestBody CreatePessoa pessoa) {
 
         pService.cadastrarPessoas(pessoa);
 
         return ResponseEntity.status(201).build();
     }
+
+    @PutMapping("/{idPessoa}")
+    public ResponseEntity<?> alterarEnderecoPrincipal(@Valid @PathVariable Long idPessoa, @RequestBody UpdatePessoa pessoa) {
+
+        pService.alterarPessoas(idPessoa, pessoa);
+
+        return ResponseEntity.status(201).build();
+    }
+
 
     @PutMapping("/{idPessoa}/endereco/{idEndereco}/principal")
     public ResponseEntity<?> alterarEnderecoPrincipal(@Valid @PathVariable Long idPessoa,

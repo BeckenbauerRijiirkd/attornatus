@@ -7,9 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.api.attornatus.controller.Dto.PessoaDto;
-import com.api.attornatus.controller.Form.PessoaCreateForm;
+import com.api.attornatus.controller.Form.CreatePessoa;
+import com.api.attornatus.controller.Form.UpdatePessoa;
 import com.api.attornatus.model.Pessoa;
 import com.api.attornatus.repository.PessoaRepository;
+
+import jakarta.validation.Valid;
 
 @Service
 public class PessoaService {
@@ -30,7 +33,7 @@ public class PessoaService {
         return pessoa;
     }
 
-    public void cadastrarPessoas(PessoaCreateForm create) {
+    public void cadastrarPessoas(CreatePessoa create) {
 
         Pessoa pessoa = new Pessoa(create.getNome(), create.getDtNascimento(), create.getEnderecos());
 
@@ -39,6 +42,16 @@ public class PessoaService {
 
         pRepository.save(pessoa);
 
+    }
+    
+    public void alterarPessoas(Long idPessoa, UpdatePessoa update) {
+
+        Pessoa pessoa = this.buscaPessoaPorId(idPessoa);
+
+        pessoa.setNome(update.getNome());
+        pessoa.setDtNascimento(update.getDtNascimento());
+
+        pRepository.save(pessoa);
     }
 
     public void alteraEnderecoPrincipal(Long idPessoa, Long idEndereco) {
@@ -53,5 +66,6 @@ public class PessoaService {
         pRepository.save(pessoa);
 
     }
+
 
 }
