@@ -10,3 +10,5 @@
 >**Deploy:** 🚀https://attornatus-production-11bb.up.railway.app/
 
 >**Swagger:** 🍃https://attornatus-production-11bb.up.railway.app/swagger-ui/index.html
+
+>**Requests Postman** 🤖[Postman_collection.json](AttornatusRequests.postman_collection.json)
